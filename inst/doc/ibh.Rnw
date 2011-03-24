@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+\renewcommand{\baselinestretch}{1.5} 
+\usepackage[times,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage{Sweave}
+\begin{document}
+%\VignetteIndexEntry{ibh} 
+\title{Interaction Based Homogeneity}
+\author{Kircicegi Korkmaz, Volkan Atalay and Rengul Cetin-Atalay
+      }
+      
+\maketitle
+
+\section{Introduction}
+ We need quantitative metrics to measure the quality of gene lists for the interpretation of clustering results as well as for the evaluation and comparison of different algorithms designed for several types of genomics or proteomics data such as microarrays. Interaction Based Homogeneity (IBH) measures the fitness of a gene list to an  interaction network. 
+ 
+Given a gene list of n genes, we first form an adjacency matrix \textit{A} whose rows and columns are genes in the list where \eqn{A_{ij} = 1} if genes\textit{ i} and \textit{j }
+have an interaction in the network and \eqn{A_{ij}=0}, otherwise. 
+
+The Interaction Based Homogeneity for a gene list 
+\eqn{L=\{g_1, g_2, ..., g_n\}}, of size n is then calculated as:
+
+\deqn{IBH(L) ={{\sum_{i=1}^n{
+                                        	\sum_{j=1}^n
+                                        			{A_{ij}}
+                                        		}
+                                        		\over{n^2}
+                                        		}}}
+  
+The \textit{ibh} package contains easy-to-use methods to calculate Interaction Based Homogeneity in different cases. The user can use the predefined interactions which are taken from BioGRID\cite{BioGRID} database or can provide his own interaction network. There are predefined interactions for 7 organisms:  Arabidopsis thaliana, Caenerhabditis elegans, Drosophila melanogaster , Homo sapiens, Mus musculus, Saccharomyces cerevisae, and Schizosaccharomyces pombe. When using predefined interactions, unique ids(systematic names), official names or Entrez ids can be used as identifers. 
+\section{Functions} 
+The ibh package contains 9 functions: \textit{ibh, ibhBioGRID, ibhForMultipleGeneLists, ibhForMultipleGeneListsBioGRID, ibhClusterEval, ibhClusterEvalBioGRID, readDirectedInteractionsFromCsv, readUndirectedInteractionsFromCsv} and \textit{findEntry}.
+
+The \textit{ibh} function can be used the Interaction Based Homogeneity(IBH) for a single gene list, users should provide their own interactions. The value of IBH is between 0 and 1, higher values indicate more similar gene lists. For example:
+
+<<ibhExample>>=
+ library(ibh)
+ data(ArabidopsisBioGRIDInteractionEntrezId)
+ geneList <- list(839226, 817241, 824340, 832179, 818561, 831145, 
+     838782, 826404)
+ ibh(ArabidopsisBioGRIDInteractionEntrezId, geneList)
+@
+In the above example, we provided or own interactions which is taken from the \textit{simpIntLists} package. 
+
+When users want to use the predefined interactions which are taken from the BioGRID database, they should use the \textit{ibhBioGRID} function. The function takes the organism name and identifier type as input as well as the gene list to be evaluated. For example:
+<<ibhBioGRIDExample1>>=> 
+ geneList <- list(839226, 817241, 824340, 832179, 818561, 831145, 
+   838782, 826404)
+ibhBioGRID(geneList, organism = "arabidopsis", idType = "EntrezId")
+@
+<<ibhBioGRIDExample2>>=
+ geneList <- list("YJR151C", "YBL032W", "YAL040C", "YBL072C", 
+     "YCL050C", "YCR009C")
+ ibhBioGRID(geneList, organism = "yeast", idType = "UniqueId")
+@
+When the users want to evaluate more than one gene list at a time, they should use \textit{ibhForMultipleGeneLists} and \textit{ibhForMultipleGeneListsBioGRID} functions. For example:
+<<ibhForMultipleGeneListsExample>>=
+ data(ArabidopsisBioGRIDInteractionEntrezId)
+ listofGeneList <- list(list(839226, 817241, 824340, 832179, 818561, 
+     831145, 838782, 826404), list(832018, 839226, 838824))
+ ibhForMultipleGeneLists(ArabidopsisBioGRIDInteractionEntrezId, 
+     listofGeneList)
+@
+<<ibhForMultipleGeneListsBioGRIDExample>>=
+ listofGeneList <- list(list("YJR151C", "YBL032W", "YAL040C", 
+     "YBL072C", "YCL050C", "YCR009C"), list("YDR063W", "YDR074W", 
+     "YDR080W", "YDR247W", "YGR183C", "YHL033C"), list("YOL068C", 
+     "YOL015W", "YOL009C", "YOL004W", "YOR065W"))
+ ibhForMultipleGeneListsBioGRID(listofGeneList, organism = "yeast", 
+     idType = "UniqueId")
+@
+The package also include two functions for clustering evaluation: \textit{ibhClusterEval} and \textit{ibhClusterEvalBioGRID}. The user should first cluster the data and then provide the clustering result, names of genes clustered as input. When using BioGRID interactions two additional parameters, organism name and identifier type, is also needed. For example:
+<<ibhClusterEvalExample>>=
+ require(yeastCC)
+ require(stats)
+ data(yeastCC)
+ require(simpIntLists)
+ data(YeastBioGRIDInteractionUniqueId)
+ subset <- exprs(yeastCC)[1:50, ]
+ d <- dist(subset, method = "euclidean")
+ k <- kmeans(d, 3)
+ ibhClusterEval(k$cluster, rownames(subset), YeastBioGRIDInteractionUniqueId)
+@
+<<ibhClusterEvalBioGRIDExample>>=
+ ibhClusterEvalBioGRID(k$cluster, rownames(subset), organism = "yeast", 
+     idType = "UniqueId")
+@
+In order to create interaction lists, the package also contains two functions for reading interactions from comma separated files: \textit{readDirectedInteractionsFromCsv} and \textit{readUndirectedInteractionsFromCsv}. Finally, the \textit{findEntry} function provides a search through the interactions.
+\bibliography{ibh}
+
+\printindex{}
+
+\end{document}
