@@ -1,6 +1,6 @@
 Package: ibh
 Type: Package
-Version: 1.1.0
+Version: 1.2.0
 Date: 2010-03-06
 Title: Interaction Based Homogeneity for Evaluating Gene Lists
 Depends: simpIntLists
