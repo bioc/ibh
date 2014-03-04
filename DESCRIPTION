@@ -1,16 +1,18 @@
 Package: ibh
 Type: Package
-Version: 1.11.1
+Version: 1.11.2
 Date: 2012-04-27
 Title: Interaction Based Homogeneity for Evaluating Gene Lists
 Depends: simpIntLists
 Suggests: yeastCC, stats
 Author: Kircicegi Korkmaz, Volkan Atalay, Rengul Cetin Atalay.
 Maintainer: Kircicegi Korkmaz <e102771@ceng.metu.edu.tr>
-Description: This package contains methods for calculating Interaction Based 
- Homogeneity to evaluate fitness of gene lists to an interaction network which is useful 
- for evaluation of clustering results and gene list analysis. BioGRID
- interactions are used in the calculation. The user can also provide their own interactions.  
+Description: This package contains methods for calculating Interaction
+        Based Homogeneity to evaluate fitness of gene lists to an
+        interaction network which is useful for evaluation of
+        clustering results and gene list analysis. BioGRID interactions
+        are used in the calculation. The user can also provide their
+        own interactions.
 License: GPL (>= 2)
-biocViews: QualityControl, DataImport, GraphsAndNetworks, NetworkEnrichment
-
+biocViews: QualityControl, DataImport, GraphAndNetwork,
+        NetworkEnrichment
